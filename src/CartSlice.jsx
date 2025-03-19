@@ -33,3 +33,27 @@ export const CartSlice = createSlice({
 export const { addItem, removeItem, updateQuantity } = CartSlice.actions;
 
 export default CartSlice.reducer;
+
+// ✅ Add UI Component Below
+export const AddToCartButton = ({ item }) => {
+    const dispatch = useDispatch();
+    const cartItems = useSelector(state => state.cart.items);
+
+    // Check if item is already in the cart
+    const isAddedToCart = cartItems.some(cartItem => cartItem.name === item.name);
+
+    return (
+        <button 
+            className="cart-item-add"
+            onClick={() => dispatch(addItem(item))} 
+            disabled={isAddedToCart} 
+            style={{
+                backgroundColor: isAddedToCart ? 'grey' : '#ff6600',
+                color: 'white',
+                cursor: isAddedToCart ? 'not-allowed' : 'pointer'
+            }}
+        >
+            {isAddedToCart ? 'Added to Cart' : 'Add to Cart'}
+        </button>
+    );
+};

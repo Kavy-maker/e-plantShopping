@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { removeItem, updateQuantity } from './CartSlice';
+import { addItem, removeItem, updateQuantity } from './CartSlice';
 import './CartItem.css';
 
 const CartItem = ({ onContinueShopping }) => {
     const cart = useSelector(state => state.cart.items);
     const dispatch = useDispatch();
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const [addedToCart, setAddedToCart] = useState({});
 
     // Calculate total amount for all products in the cart
     const calculateTotalAmount = () => {
@@ -45,6 +46,17 @@ const CartItem = ({ onContinueShopping }) => {
         dispatch(removeItem(item.name));
     };
 
+    // Add handleAddToCart function
+    const handleAddToCart = (product) => {
+        if (!addedToCart[product.name]) {
+            dispatch(addItem(product));
+            setAddedToCart((prevState) => ({
+                ...prevState,
+                [product.name]: true,
+            }));
+        }
+    };
+
     // Calculate total cost based on quantity for an item
     const calculateTotalCost = (item) => {
         const itemCost = parseFloat(item.cost.substring(1));
@@ -54,7 +66,7 @@ const CartItem = ({ onContinueShopping }) => {
     return (
         <div className="cart-container">
             <h2 style={{ color: 'black' }}>Total Cart Amount: ${calculateTotalAmount()} ({totalItems} items)</h2>
-            
+
             <div>
                 {cart.map(item => (
                     <div className="cart-item" key={item.name}>
@@ -69,6 +81,8 @@ const CartItem = ({ onContinueShopping }) => {
                             </div>
                             <div className="cart-item-total">Total: ${calculateTotalCost(item)}</div>
                             <button className="cart-item-delete" onClick={() => handleRemove(item)}>Delete</button>
+
+
                         </div>
                     </div>
                 ))}

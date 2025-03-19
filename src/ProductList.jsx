@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import './ProductList.css'
 import CartItem from './CartItem';
 import { useDispatch } from 'react-redux';
-import { addItem } from './CartSlice';
+import { addItem, removeItem } from './CartSlice';
 
 function ProductList({ onHomeClick }) {
     const [showCart, setShowCart] = useState(false);
     const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
-    const [addedToCart, setAddedToCart] = useState(false);
+    const [addedToCart, setAddedToCart] = useState({});
     const dispatch = useDispatch();
 
     const plantsArray = [
@@ -225,7 +225,7 @@ function ProductList({ onHomeClick }) {
         padding: '15px',
         display: 'flex',
         justifyContent: 'space-between',
-        alignIems: 'center',
+        alignItems: 'center',
         fontSize: '20px',
     }
     const styleObjUl = {
@@ -262,14 +262,26 @@ function ProductList({ onHomeClick }) {
 
     const handleAddToCart = (product) => {
         if (!addedToCart[product.name]) {
-          dispatch(addItem(product));
-          setAddedToCart((prevState) => ({
-            ...prevState,
-            [product.name]: true,
-          }));
+            dispatch(addItem(product));
+        } else {
+            dispatch(removeItem(product)); // Ensure you have a removeItem action
         }
-      };
+    
+        setAddedToCart((prevState) => ({
+            ...prevState,
+            [product.name]: !prevState[product.name], // Toggle state
+        }));
+    };
 
+    const handleRemoveFromCart = (product) => {
+        dispatch(removeItem(product)); // Remove from Redux state
+    
+        setAddedToCart((prevState) => ({
+            ...prevState,
+            [product.name]: false, // Reset button back to "Add to Cart"
+        }));
+    };
+    
     
 
     return (
@@ -305,7 +317,17 @@ function ProductList({ onHomeClick }) {
                                         <div className="product-cost">{plant.cost}</div>
                                         <div className="product-description">{plant.description}</div>
                                         {/*Similarly like the above plant.name show other details like description and cost*/}
-                                        <button className="product-button" onClick={() => handleAddToCart(plant)}>Add to Cart</button>
+                                        <button
+                                            className="add-to-cart-button"
+                                            onClick={() => handleAddToCart(plant)}
+                                            style={{
+                                                backgroundColor: addedToCart[plant.name] ? "gray" : "green",
+                                                color: "white",
+                                            }}
+                                        >
+                                            {addedToCart[plant.name] ? "Added to Cart" : "Add to Cart"}
+                                        </button>
+
 
                                     </div>
                                 ))}
