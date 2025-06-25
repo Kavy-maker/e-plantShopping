@@ -233,3 +233,33 @@ body {
         text-align: center;
     }
 }
+
+.navbar-plants-title a {
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+}
+
+.navbar-plants-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.navbar-plants-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+}
+
+.navbar-plants-link {
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 1px;
+}
+
